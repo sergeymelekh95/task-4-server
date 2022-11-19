@@ -1,12 +1,14 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
 
-const app = express();
+require('dotenv').config();
 
-app.use(express.static(path.join(__dirname, 'build')));
+const LOGIN_MONGO = process.env.LOGIN_MONGO;
+const PASSWORD_MONGO = process.env.PASSWORD_MONGO;
+
+const app = express();
 
 app.use(cors(corsOptions));
 // app.use(cors());
@@ -24,14 +26,10 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api', usersRouter);
 
-app.get('/*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
-
 const start = async () => {
     try {
         await mongoose.connect(
-            'mongodb+srv://sergeymelekh95:8000160q@cluster0.rb7ridz.mongodb.net/users-database?retryWrites=true&w=majority'
+            `mongodb+srv://${LOGIN_MONGO}:${PASSWORD_MONGO}@cluster0.rb7ridz.mongodb.net/users-database?retryWrites=true&w=majority`
         );
 
         app.listen(PORT, () =>
