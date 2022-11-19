@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const corsOptions = require('./config/corsOptions')
 
 const app = express();
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 const blackList = new Set();
 module.exports = blackList;
