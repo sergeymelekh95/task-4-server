@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
+const path = require('path')
 
 const app = express();
 
@@ -17,6 +18,9 @@ const usersRouter = require('./routers/usersRouter');
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
+
+app.use('/', express.static(path.join(__dirname, 'public')))
+
 app.use('/api/auth', authRouter);
 app.use('/api', usersRouter);
 
