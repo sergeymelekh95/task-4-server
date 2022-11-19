@@ -16,7 +16,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.2",
     "nodemon": "^2.0.20",
-    "redis": "^4.5.0",
     "uuid": "^9.0.0"
   }
 }

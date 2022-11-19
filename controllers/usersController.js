@@ -1,3 +1,4 @@
+const blackList = require('../index');
 const redisClient = require('../index');
 const User = require('../models/User');
 
@@ -18,13 +19,7 @@ class usersController {
         try {
             const { emails } = req.body;
 
-            await redisClient.sRem('black_list', emails, (err, reply) => {
-                if (err) {
-                    return res.status(404).json({
-                        message: `unable to get users from black_list, error - ${err}`,
-                    });
-                }
-            });
+            emails.forEach((email) => blackList.delete(email));
 
             const deleted = await User.deleteMany({
                 email: {
@@ -48,23 +43,9 @@ class usersController {
         try {
             const { emails, status } = req.body;
 
-            if (status) {
-                await redisClient.sAdd('black_list', emails, (err, reply) => {
-                    if (err) {
-                        return res.status(404).json({
-                            message: `black_list error - ${err}`,
-                        });
-                    }
-                });
-            } else {
-                await redisClient.sRem('black_list', emails, (err, reply) => {
-                    if (err) {
-                        return res.status(404).json({
-                            message: `black_list error - ${err}`,
-                        });
-                    }
-                });
-            }
+            status
+                ? emails.forEach((email) => blackList.add(email))
+                : emails.forEach((email) => blackList.delete(email));
 
             const updated = await User.updateMany(
                 { email: { $in: emails } },

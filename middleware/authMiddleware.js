@@ -1,4 +1,4 @@
-const redisClient = require('../index');
+const blackList = require('../index');
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config');
 
@@ -8,17 +8,7 @@ module.exports = async (req, res, next) => {
     }
 
     try {
-        const blackList = await redisClient.sMembers(
-            'black_list',
-            (err, reply) => {
-                if (err) {
-                    console.log('black_list error - ', err);
-                }
-            }
-        );
-
-        if (blackList.length && blackList.includes(req.body.email)) {
-            console.log('5')
+        if (blackList.size && blackList.has(req.body.email)) {
             return res.status(403).json({ message: 'user are blocked' });
         }
 

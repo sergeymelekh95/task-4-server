@@ -1,27 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const redis = require('redis');
 
 const app = express();
 
 app.use(cors());
 
-let redisClient = redis.createClient();
-
-module.exports = redisClient;
-
-(async () => {
-    redisClient.on('error', (error) => {
-        console.log(error);
-    });
-
-    redisClient.on('connect', () => {
-        console.log('Redis connected!');
-    });
-
-    await redisClient.connect();
-})();
+const blackList = new Set();
+module.exports = blackList;
 
 const authRouter = require('./routers/authRouter');
 const usersRouter = require('./routers/usersRouter');
